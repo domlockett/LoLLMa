@@ -1,160 +1,159 @@
 # LoLLMa 
 $^{\text{ Lockett's local LLM AI}}$
 
-## Introduction to loLLMa
+This guide is tailored for data enthusiasts, gamers, and hobbyists interested in managing local Large Language Models (LLMs). 
 
-This project aims to help you host and manage multiple large language models (LLMs) using a gaming hardware setup, including a 4080 16GB GPU, an Intel Core i9-13900K CPU, and 128GB of RAM.
-
-### Purpose
-
-This guide is designed for beginners interested in handling local LLMs. It will cover how to integrate various models, training methods, and configurations. It's especially useful for data enthusiasts, researchers, and hobbyists who want to explore the potential of LLMs and set up the necessary environment on their local machines.
+It covers integrating various models, training methods, and configurations, providing a comprehensive setup for exploring the potential of LLMs on your local machine. 
 
 By developing these skills and technologies for local models, you can ensure long-term usability and independence from external AI services.
 
-## Quick Setup Guide
+This guide assumes you have a basic understanding of Python and your personal hardware specifications. The utilities needed for LLMs work across operating systems and can be run directly in a terminal.
 
-This guide assumes you have a basic understanding of Python, integrated development environments (IDEs), and your personal hardware specifications. I use Windows 11 and Visual Studio Code. You will also need utilities such as Python and Conda. If you are unfamiliar with these, you may want to look for tutorials or guides online for initial setup.
+In academic fashion, I will be keeping a general guide that includes software and utilities I used to get set up. Throughout this README you will find minimal instructions with links to additional learning materials like this beginners guide to [Learning LLM's](Learning_LLMS.md).
 
-### Hardware and Software Requirements:
+## Utilities
 
-- **Hardware**: A robust setup is recommended, such as a 4080 16GB GPU, an Intel Core i9-13900K CPU, and 128GB of RAM.
-- **Software**: You need Python 3.11 and Visual Studio Code. Additionally, the CUDA Toolkit is required for GPU support.
+Before diving in and getting our model running take the time to understand the limits of your machine. 
 
-### Setting Up the Environment:
+### Hardware considerations
 
-1. **Install Python**: Download and install Python 3.11 from the [official Python website](https://www.python.org/downloads/). Verify the installation by opening a terminal and running:
-    ```sh
-    python --version
-    ```
+To effectively run higher-end models, a powerful computer setup is typically necessary. These models demand significant hardware resources, including high VRAM, processing power, and memory. 
 
-2. **Install Visual Studio Code and CUDA**:
-   - Download and install Visual Studio Code from the [official website](https://code.visualstudio.com/).
-   - During the installation of Visual Studio, ensure you select `C++ core features`, `C++ CMake Tools for Windows`, and the appropriate Windows SDK.
-   - Download and install the CUDA Toolkit from the [NVIDIA website](https://developer.nvidia.com/cuda-downloads). After installation, verify the setup by running the following commands in the terminal:
-     ```sh
-     nvcc --version
-     ```
-     ```sh
-     nvidia-smi
-     ```
 
-### Additional Resources
+- **High-End GPU**: Modern GPUs with at least 16GB VRAM, such as NVIDIA RTX 3080, 3090, or 4080, are recommended. Higher VRAM allows for running larger models and improves performance.
+- **CPU**: A powerful multi-core CPU like Intel Core i9 or AMD Ryzen 9 is beneficial for handling non-offloaded tasks.
+- **RAM**: At least 64GB of RAM is recommended.
+- **Storage**: Fast SSD storage (preferably NVMe) to quickly load models and datasets.
 
-For a more detailed guide on setting up these tools, consider referring to open-source guides available online:
 
-- **Python Installation Guide**: [Python Installation](https://realpython.com/installing-python/)
-- **Visual Studio Code Setup**: [VS Code Setup](https://code.visualstudio.com/docs/setup/setup-overview)
-- **CUDA Toolkit Installation**: [CUDA Installation Guide](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/)
+### Software requirements
 
-This guide provides a foundational setup to get you started with local LLMs. Once you have your environment ready, you can move on to integrating models and exploring various configurations to optimize performance on your hardware.
+- **Python 3.11**: Follow this [Python Installation Guide](https://realpython.com/installing-python/).
+- **CUDA Toolkit**: Follow this [CUDA Installation Guide](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/).
+- **Git**: Follow this [Git Installation Guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
-### Setting Up llama.cpp and Text Generation Web UI:
-- **Clone the Repository**:
-  ```cmd
-  cd .\text-generation-webui
-  git clone https://github.com/oobabooga/text-generation-webui.git .
-  python -m venv env
-  .\env\Scripts\activate
-  ```
-- **Additional Steps for GPU Users**:
-  ```cmd
-  set CMAKE_ARGS=-DLLAMA_CUBLAS=ON
-  set FORCE_CMAKE=1
-  pip install llama-cpp-python --no-cache-dir --verbose
-  ```
+Ensure that these software tools are installed and properly configured on your system. They will need access to the PATH environment variables to function correctly. Additionally, there may be other dependencies each user needs to fulfill to get these environments running smoothly.
 
-### Choose and Download a Model
 
-To choose a suitable model, refer to several leaderboards that evaluate and rank LLMs based on various benchmarks:
+You can check the status of these required utilities w the following commands:
+
+```sh
+python --version
+nvcc --version
+git --version
+```
+
+If our utilities are running smoothly we can turn to the first step of setting up our LLM which is downloading a repository that will contain the tools to make a web app that will host our LLMs.
+
+
+---
+
+### Oobabooga Text Generation WebUI
+
+Oobabooga Text Generation WebUI is an open-source project that provides a web-based interface for interacting with various language models, including those running on llama.cpp and other backends. It allows users to easily load, configure, and generate text with different models through a user-friendly web interface. This tool is particularly useful for those who prefer a GUI over command-line interfaces.
+
+### Key Features
+
+- **User-Friendly Interface**: Provides a web-based interface to load models, configure settings, and generate text.
+- **Backend Support**: Integrates with various backends, including llama.cpp, to run models on both CPU and GPU.
+- **Model Management**: Simplifies the process of downloading, setting up, and switching between different language models.
+- **Customization**: Offers advanced configuration options to optimize performance based on hardware capabilities.
+
+Once we download the repository we will have access to three key features- llama.cpp, text-generation-webui (Oobabooga), and KoboldAI- which together create a robust environment for running local LLMs. Here's how they integrate:
+
+1. **llama.cpp**: Serves as the backend engine that performs the actual computations required for text generation. It leverages your CPU and GPU to run models efficiently.
+
+2. **Oobabooga Text Generation WebUI**: Acts as the primary interface where you interact with the models. It simplifies model management and provides a platform for generating text. This will open as a tab in your default web browser.
+
+3. **KoboldAI**: Provides additional features and customization options that enhance the text generation experience. It integrates within the Oobabooga interface to offer more functionality.
+
+
+## Clone Oobabooga
+
+1. **Open Command Prompt:**
+   - Press `Win + R`, type `cmd`, and press `Enter`.
+
+2. **Navigate to directory of choice:**
+   - Use the `cd` command to change the directory to where your want your `text-generation-webui` folder to be located. For example:
+
+```sh
+cd C:\<Your Username>\Documents\LocalLLM
+```
+
+3. **Clone the Repository:**
+   - Clone the `text-generation-webui` repository from GitHub. Use the following command:
+```sh
+git clone https://github.com/oobabooga/text-generation-webui
+```
+
+4. **Navigate to the `text-generation-webui` directory:**
+   - Change the directory to the newly cloned `text-generation-webui`:
+
+```sh
+cd text-generation-webui
+```
+
+5. **Set Up a Python Virtual Environment:**
+   - Create and activate a Python virtual environment:
+```sh
+python -m venv lollma
+lollma\Scripts\activate
+```
+
+4. **Install Required Dependencies:**
+   - Install the necessary dependencies using `pip`:
+
+```sh
+pip install -r requirements.txt
+```
+
+## Choose a model
+
+When selecting a model, it's crucial to consider the model's size and performance benchmarks. Here are a few leaderboards that evaluate and rank Large Language Models (LLMs):
 
 - **Hugging Face Open LLM Leaderboard**: [Open LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard)
 - **EleutherAI's lm-evaluation-harness**: [lm-evaluation-harness Leaderboard](https://github.com/EleutherAI/lm-evaluation-harness)
 - **Papers with Code Leaderboard**: [Papers with Code Leaderboard](https://paperswithcode.com/sota)
 - **OpenAI API Models**: [OpenAI Models](https://beta.openai.com/docs/models)
 
-For this example, we’ll use the `Nous-Hermes-2-Yi-34B` model.
+### Choosing a model
 
-### Download the Model Files
+The main consideration when using a model is size. Choosing the appropriate model requires understanding a couple term
+**Parameters:** These are the core components of an LLM. Models are often named based on the number of parameters they contain (e.g., 33B means 33 billion parameters). More parameters typically mean better performance but also higher resource requirements.
 
-Follow these steps to download and set up your chosen models:
+**Tokens:** These are the smallest units of text the model processes. For example, the sentence "Hello, world!" would be broken down into smaller tokens for the model to analyze.
 
-1. **Create Directories**: 
-   Create a directory for each model in the `text-generation-webui/models` folder.
-   ```cmd
-   mkdir .\text-generation-webui\models\Nous-Hermes-2-Yi-34B
-   ```
+**Quantization:** This technique reduces the model's precision to save memory. For example, reducing from 32-bit floats (FP32) to 8-bit integers (Q8) reduces the memory footprint significantly.
 
-### Downloading the Model
+### Memory Usage per Parameter
 
-To download the Nous Hermes 2 Yi 34B model with the recommended quantization types, you need to:
+| Quantization Type | Bytes per Parameter | 7B Parameters (GB) | 13B Parameters (GB) | 33B Parameters (GB) |
+|-------------------|---------------------|--------------------|---------------------|---------------------|
+| FP32 (32-bit float) | 4 bytes            | 28 GB              | 52 GB               | 132 GB              |
+| Q8 (8-bit)          | 1 byte             | 7 GB               | 13 GB               | 33 GB               |
+| Q6 (6-bit)          | 0.75 bytes         | 5.25 GB            | 9.75 GB             | 24.75 GB            |
+| Q5_K_M (5-bit optimized) | 0.625 bytes    | 4.375 GB           | 8.125 GB            | 20.625 GB           |
+| Q4 (4-bit)          | 0.5 bytes          | 3.5 GB             | 6.5 GB              | 16.5 GB             |
 
-1. **Visit the Model Page:**
-   Go to the [Nous Hermes 2 Yi 34B GGUF model page on Hugging Face](https://huggingface.co/NousResearch/Nous-Hermes-2-Yi-34B-GGUF/tree/main).
+### Example Calculation for a 33B Parameter Model with Q5_K_M Quantization
 
-2. **Select the Desired Quantization:**
-   Depending on your hardware and the desired quality-speed trade-off, choose one of the recommended quantization types (Q4_K_S, Q4_K_M, Q5_K_M).
+1. **Quantization Type**: Q5_K_M (5-bit optimized)
+2. **Bytes per Parameter**: 0.625 bytes
+3. **Total Parameters**: 33 billion (33B)
 
-
-- **Q4_K_S:** Good speed and acceptable quality, recommended for 7B models.
-- **Q4_K_M:** Better quality, slightly more demanding on hardware.
-- **Q5_K_M:** Highest recommended quality, slower inference, best if hardware can handle it.
-
-To determine the memory requirements for the Nous-Hermes 33B model with Q5_K_M quantization, we need to understand how quantization affects memory usage. Here's the breakdown of the memory requirements based on the quantization type and the number of parameters:
-
-### Understanding Quantization and Memory Usage
-
-#### Memory Usage per Parameter
-- **FP32 (32-bit float)**: 4 bytes per parameter
-- **Q8 (8-bit)**: 1 byte per parameter
-- **Q6 (6-bit)**: 0.75 bytes per parameter
-- **Q4 (4-bit)**: 0.5 bytes per parameter
-- **Q5_K_M (5-bit with specific optimizations)**: approximately 0.625 bytes per parameter (estimated based on typical quantization efficiency)
-
-### Memory Calculation for Nous-Hermes 33B Q5_K_M
-1. **Total Parameters**: 33 billion (33B)
-2. **Q5_K_M Quantization**: Approximately 0.625 bytes per parameter
-
-#### Calculation
-\[ \text{Memory Requirement} = \text{Parameters} \times \text{Bytes per Parameter} \]
-\[ \text{Memory Requirement} = 33B \times 0.625 \, \text{bytes} \]
-\[ \text{Memory Requirement} = 20.625 \, \text{GB} \]
-
+**Memory Requirement Calculation**:
+$$ \text{Memory Requirement} = \text{Parameters} \times \text{Bytes per Parameter} $$
+$$ \text{Memory Requirement} = 33 \text{B} \times 0.625 \, \text{bytes} $$
+$$ \text{Memory Requirement} = 20.625 \, \text{GB} $$
 By choosing the appropriate quantization type and downloading the required files, you can optimize the performance and quality of your language model based on your hardware capabilities.
-   Go to the model's page on Hugging Face and manually download the model files. For example, download all files for `` from [Hugging Face](https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/tree/main/Meta-Llama-3-70B-Instruct-Q8_0.gguf).
 
-3. **Place Files in the Directory**: 
-   Move the downloaded files into the corresponding model directory you created.
-   ```cmd
-   move <path_to_downloaded_files>\* C:\Users\<YourUsername>\Documents\text-generation-webui\models\<ModelName>\
-   ```
-
-4. **Automatic Detection**:
-   Both `kobold.cpp` and `llama.cpp` will automatically detect all model files hosted in the `models` folder. Ensure that the model directories are correctly named and files are placed in the right locations.
-
-### Example for Meta-Llama-3-70B-Instruct-GGUF
-
-  1. **Create Directory**:
-    ```cmd
-    mkdir -p C:\Users\<YourUsername>\Documents\text-generation-webui\models\Meta-Llama-3-70B-Instruct-GGUF
-    ```
-
-  2. **Download Files**:
-    Visit [Meta-Llama-3-70B-Instruct-GGUF](https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/tree/main/Meta-Llama-3-70B-Instruct-Q8_0.gguf) and download all necessary files.
-
-  3. **Move Files**:
-    ```cmd
-    move <path_to_downloaded_files>\* C:\Users\<YourUsername>\Documents\text-generation-webui\models\Meta-Llama-3-70B-Instruct-GGUF\
-    ```
-
-Repeat the process for the other models by replacing the placeholders with the actual model names and download links. This ensures all models are set up and ready for use with `kobold.cpp` and `llama.cpp`.
 
 ### Running the Model
 Start the server with the model:
 
-```cmd
+```sh
 cd .\text-generation-webui
-.\env\Scripts\activate
-
+python -m venv lollma
 python server.py --listen --chat --n-gpu-layers 63 
 
 ```
@@ -163,7 +162,7 @@ Access the server at [http://localhost:7860/](http://localhost:7860/). This setu
 
 ## Optimizing settings
 
-To optimize your model settings and improve the generation speed for the Nous-Hermes-2-Yi-34B-GGUF model, let's first break down and adjust your settings based on your hardware specifications (RTX 4080 with 16GB VRAM). Here's a detailed table of recommended settings and an explanation for each:
+To optimize your model settings and improve the generation speed, let's first break down and adjust your settings based on your hardware specifications (RTX 4080 with 16GB VRAM). Here's a detailed table of recommended settings and an explanation for each:
 
 ### Model Settings
 

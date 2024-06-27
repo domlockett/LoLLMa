@@ -2,8 +2,7 @@
 
 ## What is an LLM?
 
-Large Language Models (LLMs) are sophisticated AI systems designed to understand and generate human-like text based on vast amounts of data. They are trained on diverse datasets containing text from books, articles, websites, and other sources to learn the complexities of language, including grammar, context, and semantic meaning.
-
+Large Language Models (LLMs) are sophisticated AI systems designed to understand and generate human-like text based on vast amounts of data. They are trained on diverse datasets containing text from books, articles, websites, and other sources to learn the complexities of language, including grammar, context, and semantic meaning. 
 ## Tokens
 
 In the context of Large Language Models (LLMs), a token is a fundamental unit of text. Tokens can be as small as single characters or as large as entire words. They are the building blocks that models use to understand and generate language.
@@ -28,11 +27,10 @@ Example:
 - Token IDs: [15496, 11, 995, 0]
 
 
-### Parameters
+## Parameters
 
 Parameters are the backbone of neural networks, including LLMs. They include weights and biases that the model adjusts during training to learn patterns from data. The number of parameters in a model is indicative of its capacity to represent complex patterns and make accurate predictions.
 
-#### Key Points about Parameters:
 - **Representation Capacity**: More parameters generally allow the model to capture more intricate patterns in the data.
 - **Model Size**: The number of parameters directly affects the model’s size and hardware requirements.
 - **Performance**: Larger models with more parameters typically perform better on various tasks, provided they have sufficient training data and computational resources.

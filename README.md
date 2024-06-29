@@ -1,19 +1,15 @@
-# LoLLMa 
-$^{\text{ Lockett's local LLM AI}}$
+# LoLLMa [Lockett's Local LLM Ai Guide]
 
-This guide is tailored for data enthusiasts, gamers, and hobbyists interested in managing local Large Language Models (LLMs). 
+This guide is tailored for data enthusiasts, gamers, and hobbyists interested in managing local Large Language Models (LLMs). It covers understanding enough about Local Large Language Models to begin hosting them using an open-source UI. 
 
-It covers integrating various models, training methods, and configurations, providing a comprehensive setup for exploring the potential of LLMs on your local machine. 
+Eventually it will expand to include links that discuss the consideration and steps that go into integrating various models, training methods, and configurations, with the hopes of-- in the end-- providing a comprehensive setup for exploring the potential of LLMs on your local machine. 
 
 By developing these skills and technologies for local models, you can ensure long-term usability and independence from external AI services.
 
 This guide assumes you have a basic understanding of Python and your personal hardware specifications. The utilities needed for LLMs work across operating systems and can be run directly in a terminal.
 
-In academic fashion, I will be keeping a general guide that includes software and utilities I used to get set up. Throughout this README you will find minimal instructions with links to additional learning materials like this beginners guide to [Learning LLM's](Learning_LLMS.md).
+In academic fashion, I will be keeping a general guide that includes software and utilities I used to get set up. Throughout this README you will find minimal instructions with links to additional learning materials.
 
-## Utilities
-
-Before diving in and getting our model running take the time to understand the limits of your machine. 
 
 ### Hardware considerations
 
@@ -30,7 +26,6 @@ To effectively run higher-end models, a powerful computer setup is typically nec
 
 - **Python 3.11**: Follow this [Python Installation Guide](https://realpython.com/installing-python/).
 - **CUDA Toolkit**: Follow this [CUDA Installation Guide](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/).
-- **Git**: Follow this [Git Installation Guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 Ensure that these software tools are installed and properly configured on your system. They will need access to the PATH environment variables to function correctly. Additionally, there may be other dependencies each user needs to fulfill to get these environments running smoothly.
 
@@ -40,7 +35,6 @@ You can check the status of these required utilities w the following commands:
 ```sh
 python --version
 nvcc --version
-git --version
 ```
 
 If our utilities are running smoothly we can turn to the first step of setting up our LLM which is downloading a repository that will contain the tools to make a web app that will host our LLMs.
@@ -48,9 +42,53 @@ If our utilities are running smoothly we can turn to the first step of setting u
 
 ---
 
+## Choosing a model to download
+
+When selecting a model, it's crucial to consider the model's size and performance benchmarks. Here are a few leaderboards that evaluate and rank Large Language Models (LLMs):
+
+- **Hugging Face Open LLM Leaderboard**: [Open LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard)
+- **EleutherAI's lm-evaluation-harness**: [lm-evaluation-harness Leaderboard](https://github.com/EleutherAI/lm-evaluation-harness)
+- **Papers with Code Leaderboard**: [Papers with Code Leaderboard](https://paperswithcode.com/sota)
+- **OpenAI API Models**: [OpenAI Models](https://beta.openai.com/docs/models)
+
+<img src="images/openllm.png" width="700">
+
+
+Once you review the leeadership board you are almost garaunteed to be overwhelmed by the options. Here are a few parameters that are important to understand going in:
+
+**Parameters:** These are the core components of an LLM. Models are often named based on the number of parameters they contain (e.g., 33B means 33 billion parameters). More parameters typically mean better performance but also higher resource requirements.
+
+**Tokens:** These are the smallest units of text the model processes. For example, the sentence "Hello, world!" would be broken down into smaller tokens for the model to analyze.
+
+**Quantization:** This technique reduces the model's precision to save memory. For example, reducing from 32-bit floats (FP32) to 8-bit integers (Q8) reduces the memory footprint significantly.
+
+#### Memory Usage per Parameter
+- **FP32 (32-bit float):** 4 bytes per parameter
+- **Q8 (8-bit):** 1 byte per parameter
+- **Q6 (6-bit):** 0.75 bytes per parameter
+- **Q4 (4-bit):** 0.5 bytes per parameter
+- **Q5_K_S (5-bit with specific optimizations):** approximately 0.625 bytes per parameter (estimated based on typical quantization efficiency)
+
+### Memory Calculation for a 33B Parameter Model with Q5_K_S Quantization
+
+$$\text{Memory Requirement} = \text{Parameters} \times \text{Bytes per Parameter} $$
+
+$$\text{Memory Requirement} = 33 \text{B} \times 0.625 \, \text{bytes} $$
+
+$$\text{Memory Requirement} = 20.625 \, \text{GB} $$
+
+A bit outside of the specs of our VRAM but it's a good place to start and see how long it takes to generate each token (tokens per second).
+
+## Local LLM User Interface
+
+Running command line prompts to your LLM takes away some of the wonderment of modern AI so most of the this tutorial is downloading an open-source UI meant to give a familiar chat experience and providing an easy way to interact with the numerous settings available to us. 
+
 ### Oobabooga Text Generation WebUI
 
-Oobabooga Text Generation WebUI is an open-source project that provides a web-based interface for interacting with various language models, including those running on llama.cpp and other backends. It allows users to easily load, configure, and generate text with different models through a user-friendly web interface. This tool is particularly useful for those who prefer a GUI over command-line interfaces.
+Oobabooga Text Generation WebUI is an open-source project that provides a web-based interface for interacting with various language models, including those running on llama.cpp and other backends.
+
+<img src="images/Oobabooga.png" width="700">
+
 
 ### Key Features
 
@@ -59,12 +97,10 @@ Oobabooga Text Generation WebUI is an open-source project that provides a web-ba
 - **Model Management**: Simplifies the process of downloading, setting up, and switching between different language models.
 - **Customization**: Offers advanced configuration options to optimize performance based on hardware capabilities.
 
-Once we download the repository we will have access to three key features- llama.cpp, text-generation-webui (Oobabooga), and KoboldAI- which together create a robust environment for running local LLMs. Here's how they integrate:
+Once we download the repository we will have access to three key features- text-generation-webui (Oobabooga), KoboldAI, and llama.cpp- which together create a robust environment for running local LLMs. Here's how they integrate:
 
 1. **llama.cpp**: Serves as the backend engine that performs the actual computations required for text generation. It leverages your CPU and GPU to run models efficiently.
-
 2. **Oobabooga Text Generation WebUI**: Acts as the primary interface where you interact with the models. It simplifies model management and provides a platform for generating text. This will open as a tab in your default web browser.
-
 3. **KoboldAI**: Provides additional features and customization options that enhance the text generation experience. It integrates within the Oobabooga interface to offer more functionality.
 
 
@@ -76,145 +112,78 @@ Once we download the repository we will have access to three key features- llama
 2. **Navigate to directory of choice:**
    - Use the `cd` command to change the directory to where your want your `text-generation-webui` folder to be located. For example:
 
-```sh
-cd C:\<Your Username>\Documents\LocalLLM
-```
+   ```sh
+   cd C:\<Your Username>\Documents\LocalLLM
+   ```
 
 3. **Clone the Repository:**
    - Clone the `text-generation-webui` repository from GitHub. Use the following command:
-```sh
-git clone https://github.com/oobabooga/text-generation-webui
-```
+   ```sh
+   git clone https://github.com/oobabooga/text-generation-webui.git
+   ```
 
 4. **Navigate to the `text-generation-webui` directory:**
    - Change the directory to the newly cloned `text-generation-webui`:
 
-```sh
-cd text-generation-webui
-```
+   ```sh
+   cd text-generation-webui
+   ```
 
 5. **Set Up a Python Virtual Environment:**
-   - Create and activate a Python virtual environment:
-```sh
-python -m venv lollma
-lollma\Scripts\activate
-```
+   - Create a Python virtual environment:
+   ```sh
+   python -m venv lollma
+   ```
 
-4. **Install Required Dependencies:**
-   - Install the necessary dependencies using `pip`:
-
-```sh
-pip install -r requirements.txt
-```
-
-## Choose a model
-
-When selecting a model, it's crucial to consider the model's size and performance benchmarks. Here are a few leaderboards that evaluate and rank Large Language Models (LLMs):
-
-- **Hugging Face Open LLM Leaderboard**: [Open LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard)
-- **EleutherAI's lm-evaluation-harness**: [lm-evaluation-harness Leaderboard](https://github.com/EleutherAI/lm-evaluation-harness)
-- **Papers with Code Leaderboard**: [Papers with Code Leaderboard](https://paperswithcode.com/sota)
-- **OpenAI API Models**: [OpenAI Models](https://beta.openai.com/docs/models)
-
-### Choosing a model
-
-The main consideration when using a model is size. Choosing the appropriate model requires understanding a couple term
-**Parameters:** These are the core components of an LLM. Models are often named based on the number of parameters they contain (e.g., 33B means 33 billion parameters). More parameters typically mean better performance but also higher resource requirements.
-
-**Tokens:** These are the smallest units of text the model processes. For example, the sentence "Hello, world!" would be broken down into smaller tokens for the model to analyze.
-
-**Quantization:** This technique reduces the model's precision to save memory. For example, reducing from 32-bit floats (FP32) to 8-bit integers (Q8) reduces the memory footprint significantly.
-
-### Memory Usage per Parameter
-
-| Quantization Type | Bytes per Parameter | 7B Parameters (GB) | 13B Parameters (GB) | 33B Parameters (GB) |
-|-------------------|---------------------|--------------------|---------------------|---------------------|
-| FP32 (32-bit float) | 4 bytes            | 28 GB              | 52 GB               | 132 GB              |
-| Q8 (8-bit)          | 1 byte             | 7 GB               | 13 GB               | 33 GB               |
-| Q6 (6-bit)          | 0.75 bytes         | 5.25 GB            | 9.75 GB             | 24.75 GB            |
-| Q5_K_M (5-bit optimized) | 0.625 bytes    | 4.375 GB           | 8.125 GB            | 20.625 GB           |
-| Q4 (4-bit)          | 0.5 bytes          | 3.5 GB             | 6.5 GB              | 16.5 GB             |
-
-### Example Calculation for a 33B Parameter Model with Q5_K_M Quantization
-
-1. **Quantization Type**: Q5_K_M (5-bit optimized)
-2. **Bytes per Parameter**: 0.625 bytes
-3. **Total Parameters**: 33 billion (33B)
-
-**Memory Requirement Calculation**:
-$$ \text{Memory Requirement} = \text{Parameters} \times \text{Bytes per Parameter} $$
-$$ \text{Memory Requirement} = 33 \text{B} \times 0.625 \, \text{bytes} $$
-$$ \text{Memory Requirement} = 20.625 \, \text{GB} $$
-By choosing the appropriate quantization type and downloading the required files, you can optimize the performance and quality of your language model based on your hardware capabilities.
+## Download and Setup the Model
 
 
-### Running the Model
-Start the server with the model:
+To streamline the process, let's focus on setting up the **WhiteRabbitNeo-33B-v1-GGUF** model directly within your existing `text-generation-webui` setup. Here’s how to efficiently get the model ready for use:
 
-```sh
-cd .\text-generation-webui
-python -m venv lollma
-python server.py --listen --chat --n-gpu-layers 63 
+1. **Create the Model Directory:**
+   First, manually create a new directory within `text-generation-webui/models`. You can name this directory `WhiteRabbitNeo-33B-v1-GGUF`. This can be done quickly through your operating system's file explorer by navigating to the `text-generation-webui/models` folder and creating a new folder named `WhiteRabbitNeo-33B-v1-GGUF`.
 
-```
+2. **Download the Model Files:**
+   Visit the [WhiteRabbitNeo-33B-v1-GGUF model page on Hugging Face](https://huggingface.co/Isonium/WhiteRabbitNeo-33B-v1-GGUF/tree/main). Download the quantization version of your selected model into the folder you just created. You can do this by clicking the arrow beside the model size and saving it to your `models/WhiteRabbitNeo-33B-v1-GGUF` directory.
 
-Access the server at [http://localhost:7860/](http://localhost:7860/). This setup will expose the server to your network, allowing connections from other computers.
+<img src="images/download.png" width="700">
 
-## Optimizing settings
 
-To optimize your model settings and improve the generation speed, let's first break down and adjust your settings based on your hardware specifications (RTX 4080 with 16GB VRAM). Here's a detailed table of recommended settings and an explanation for each:
+### Launching the Model with Python
 
-### Model Settings
+With the model files in place, you can initiate the model through your already active Python environment:
 
-| Setting             | Current Value | Recommended Value | Explanation |
-|---------------------|---------------|-------------------|-------------|
-| n-gpu-layers        | 61            | 63                | Use the max GPU layers your VRAM can handle for faster processing. |
-| n_ctx               | 4096          | 4096              | Context length can remain as is; adjust if you run out of memory. |
-| tensor_split        | Empty         | ''                | No change needed unless using multiple GPUs. |
-| n_batch             | 512           | 512               | Optimal batch size for your GPU, lower if running out of memory. |
-| threads             | 0             | 16                | Set CPU threads to 16 for better multi-threading performance. |
-| threads_batch       | 0             | 4                 | Set CPU batch threads to 4 to improve CPU processing efficiency. |
-| alpha_value         | 1             | 1                 | Keep default unless experimenting with RoPE scaling. |
-| rope_freq_base      | 5000000       | 5000000           | Keep default; used for RoPE scaling. |
-| compress_pos_emb    | 1             | 1                 | Default setting for positional embeddings compression. |
-| flash_attn          | Enabled       | Enabled           | Keep enabled for better attention mechanism performance on RTX cards. |
-| tensorcores         | Enabled       | Enabled           | Utilize tensor cores for faster computation on RTX cards. |
-| streaming_llm       | Disabled      | Disabled          | Enable if you need to stream LLM output, otherwise keep disabled. |
-| attention_sink_size | 5             | 5                 | Default setting, no change needed. |
-| cpu                 | Disabled      | Disabled          | Keep disabled to prefer GPU processing. |
-| row_split           | Disabled      | Disabled          | Enable only if using multiple GPUs. |
-| no_offload_kqv      | Disabled      | Disabled          | Allow KQV offloading to balance memory and performance. |
-| no_mul_mat_q        | Disabled      | Disabled          | Keep disabled unless you face specific performance issues. |
-| no_mmap             | Disabled      | Disabled          | Keep disabled unless memory mapping causes issues. |
-| mlock               | Disabled      | Disabled          | Enable if your system supports it to lock model in memory. |
-| numa                | Disabled      | Disabled          | Enable if using a NUMA system for memory optimization. |
+1. **Activate Python environment and load requirements:**
 
-### Generation Settings
+   ```sh
+   lollma\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-| Setting                 | Current Value | Recommended Value | Explanation |
-|-------------------------|---------------|-------------------|-------------|
-| max_new_tokens          | 512           | 256               | Reduce max new tokens to improve generation speed. |
-| temperature             | 1             | 0.7               | Adjust to 0.7 for more coherent and less random output. |
-| top_p                   | 1             | 0.9               | Lower top_p to focus on the most probable tokens. |
-| top_k                   | 0             | 50                | Set top_k to 50 to limit token selection to the top 50 options. |
-| typical_p               | 1             | 0.9               | Lower typical_p for more coherent outputs. |
-| min_p                   | 0.05          | 0.05              | Keep as is unless fine-tuning for specific output needs. |
-| repetition_penalty      | 1             | 1.2               | Increase to 1.2 to avoid repetitive outputs. |
-| frequency_penalty       | 0             | 0.5               | Apply a frequency penalty to reduce token repetition. |
-| presence_penalty        | 0             | 0.5               | Apply a presence penalty to encourage diverse token usage. |
-| tfs                     | 1             | 1                 | Keep default for truncating prompt settings. |
-| truncate length         | 4096          | 2048              | Reduce truncation length to fit better within memory constraints. |
-| max tokens/second       | 0             | 20                | Increase to 20 to speed up token generation. |
-| max UI updates/second   | 0             | 20                | Increase to 20 for smoother UI performance. |
-| seed                    | -1            | -1                | Keep as is for random seed generation. |
-| activate text streaming | Enabled       | Enabled           | Keep enabled for real-time text streaming. |
+2. **Start the Server:**
+   Run the server with the command below (replacing folder/model w whatever model you chose):
+   ```sh
+   python server.py --listen --chat --n-gpu-layers 63 
+   ```
+Now if all of this went smooth (lol) you can access your local server by visiting [http://localhost:7860](http://localhost:7860) in your web browser. You can navigate to the models tab and manually load the model you downloaded. Once you do so, you are ready to have a conversation with your personal AI assistant.
 
-By making these adjustments, you should see an improvement in generation speed and overall performance. Here are some additional tips:
 
-1. **Monitor GPU and CPU Usage**: Use system monitoring tools to ensure your GPU and CPU are being utilized efficiently.
-2. **Optimize n-gpu-layers**: Experiment with increasing or decreasing the n-gpu-layers to find the optimal setting for your VRAM capacity.
-3. **Reduce Token Limits**: Lower the max_new_tokens to speed up generation time.
-4. **Adjust Sampling Settings**: Fine-tune temperature, top_p, top_k, and other sampling settings to balance quality and speed.
+<img src="images/textgenwebui.png" width="700">
 
-With these optimized settings, you should be able to improve the performance of your model on your current hardware setup.
+We can check the performance of our local models by looking at the command prompt or IDE where you launched the `python server.py...` command. 
 
+Now that your local LLM UI is up and running, you're ready to begin the ongoing process of balancing token processing speed with the desired intelligence of your local assistants. This iterative cycle will help you find the optimal setup that meets your needs for both performance and smart interaction. 
+
+<img src="images/tps.png" width="700">
+
+
+### Materials to come
+
+In the future, I hope to explore training specific use-cases where one might take advantage an off-line AI assistant. 
+
+1. Breakdown of Gradio UI
+2. Exploring Parameter settings
+3. Exploring Model settings
+4. Exploring Session settings
+5. Determining model performance
+5. Training your model 

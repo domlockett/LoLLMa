@@ -1,4 +1,5 @@
-# LoLLMa [Lockett's Local LLM Ai Guide]
+# LoLLMa:  Local Large Language Model Walkthrough
+$^{\text{Lockett's Local LLM Ai Guide}}$
 
 This guide is tailored for data enthusiasts, gamers, and hobbyists interested in managing local Large Language Models (LLMs). It covers understanding enough about Local Large Language Models to begin hosting them using an open-source UI. 
 
@@ -8,7 +9,8 @@ By developing these skills and technologies for local models, you can ensure lon
 
 This guide assumes you have a basic understanding of Python and your personal hardware specifications. The utilities needed for LLMs work across operating systems and can be run directly in a terminal.
 
-In academic fashion, I will be keeping a general guide that includes software and utilities I used to get set up. Throughout this README you will find minimal instructions with links to additional learning materials.
+In academic fashion, I will be keeping a general guide that includes software and utilities I used to get set up. Throughout this README you will find minimal instructions with links to additional learning materials like [Learning LLMs](Learning_LLMS.md).
+
 
 
 ### Hardware considerations
@@ -26,6 +28,7 @@ To effectively run higher-end models, a powerful computer setup is typically nec
 
 - **Python 3.11**: Follow this [Python Installation Guide](https://realpython.com/installing-python/).
 - **CUDA Toolkit**: Follow this [CUDA Installation Guide](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/).
+- **Git**: To install Git on your machine, refer to this [Git Installation Guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 Ensure that these software tools are installed and properly configured on your system. They will need access to the PATH environment variables to function correctly. Additionally, there may be other dependencies each user needs to fulfill to get these environments running smoothly.
 
@@ -35,6 +38,7 @@ You can check the status of these required utilities w the following commands:
 ```sh
 python --version
 nvcc --version
+git --version
 ```
 
 If our utilities are running smoothly we can turn to the first step of setting up our LLM which is downloading a repository that will contain the tools to make a web app that will host our LLMs.
@@ -78,6 +82,10 @@ $$\text{Memory Requirement} = 33 \text{B} \times 0.625 \, \text{bytes} $$
 $$\text{Memory Requirement} = 20.625 \, \text{GB} $$
 
 A bit outside of the specs of our VRAM but it's a good place to start and see how long it takes to generate each token (tokens per second).
+
+Now that we have a bit of background information, we can move forward to downloading the tools we need to host a local LLM on our personal hardware. 
+
+---
 
 ## Local LLM User Interface
 

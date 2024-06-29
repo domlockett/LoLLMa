@@ -173,7 +173,9 @@ With the model files in place, you can initiate the model through your already a
    ```sh
    python server.py --listen --chat --n-gpu-layers 63 
    ```
-Now if all of this went smooth (lol) you can access your local server by visiting [http://localhost:7860](http://localhost:7860) in your web browser. You can navigate to the models tab and manually load the model you downloaded. Once you do so, you are ready to have a conversation with your personal AI assistant.
+You can navigate to the models tab and manually load the model you downloaded. Once you do so, you are ready to have a conversation with your personal AI assistant.
+
+Now if all of this went smooth (lol) you can access your local server by visiting [http://localhost:7860](http://localhost:7860) in your web browser. 
 
 
 <img src="images/textgenwebui.png" width="700">

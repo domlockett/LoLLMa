@@ -171,7 +171,8 @@ With the model files in place, you can initiate the model through your already a
 2. **Start the Server:**
    Run the server with the command below (replacing folder/model w whatever model you chose):
    ```sh
-   python server.py --listen --chat --n-gpu-layers 63 
+   python server.py --listen --chat --n-gpu-layers 63 --model whiterabbitneo-33b-v1.Q5
+
    ```
 You can navigate to the models tab and manually load the model you downloaded. Once you do so, you are ready to have a conversation with your personal AI assistant.
 
@@ -191,6 +192,7 @@ Now that your local LLM UI is up and running, you're ready to begin the ongoing 
 
 In the future, I hope to explore training specific use-cases where one might take advantage an off-line AI assistant. 
 
+0. Loading GPTQ Models via ExLlamav2 - a more efficient use of VRAM
 1. Breakdown of Gradio UI
 2. Exploring Parameter settings
 3. Exploring Model settings
